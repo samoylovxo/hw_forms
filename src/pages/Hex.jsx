@@ -9,7 +9,8 @@ const StyledPageHex = styled.div`
   justify-content: center;
   align-items: center;
 
-  background-color: ${({ hexBackgroundColor }) => `#${hexBackgroundColor}`};
+  background-color: ${({ hexBackgroundColor, isError }) =>
+    isError ? "#b0001d" : `#${hexBackgroundColor}`};
 
   transition: background-color 0.4s;
 `;
@@ -72,13 +73,14 @@ const PageHex = () => {
   };
 
   return (
-    <StyledPageHex hexBackgroundColor={hexValue}>
+    <StyledPageHex hexBackgroundColor={hexValue} isError={showError}>
       <StyledContent>
         <StyledInput
           as={InputMask}
           mask="#******"
           maskChar={null}
           value={hexValue}
+          placeholder="Введите hex"
           onChange={(event) => handleHexChange(event.target.value)}
         />
         <StyledInput

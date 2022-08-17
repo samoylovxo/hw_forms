@@ -127,14 +127,25 @@ const PageSteps = () => {
     )
       return;
 
-    const newState = [
-      ...steps,
-      {
-        ...stepForm,
-        id: uuidv4(),
-        date: activeDate,
-      },
-    ].sort((a, b) => a.date - b.date);
+    const activeStep = {
+      ...stepForm,
+      id: uuidv4(),
+      date: activeDate,
+    };
+
+    const matchStep = steps.find(
+      (step) => step.date.getTime() === activeDate.getTime()
+    );
+
+    const newState = (
+      matchStep
+        ? steps.map((step) =>
+            step.id === matchStep.id
+              ? { ...step, distance: +matchStep.distance + +stepForm.distance }
+              : step
+          )
+        : [...steps, activeStep]
+    ).sort((a, b) => b.date - a.date);
 
     setSteps(newState);
     setStepForm(INITIAL_FORM);
@@ -156,7 +167,6 @@ const PageSteps = () => {
           <StyledInput
             as={InputMask}
             mask="99.99.9999"
-            maskChar={null}
             placeholder="Введите дату"
             value={stepForm.date}
             onChange={(event) =>
@@ -167,6 +177,7 @@ const PageSteps = () => {
             }
           />
           <StyledInput
+            type="number"
             placeholder="Введите дистанцию"
             value={stepForm.distance}
             onChange={(event) =>
